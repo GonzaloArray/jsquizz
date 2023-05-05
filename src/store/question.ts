@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { type Question } from '../type/type'
 import { persist } from 'zustand/middleware'
+import { getQuestions } from '../service/getQuestions'
 
 interface State {
   questions: Question[]
@@ -27,9 +28,7 @@ export const useQuestionStore = create<State>()(persist((set, get) => {
     questions: [],
     currentQuestion: 0,
     fetchQuestions: async (limit: number) => {
-      const res = await fetch('http://localhost:5173/data.json')
-      const json = await res.json()
-      const questions = json.sort(() => Math.random() - 0.5).slice(0, limit)
+      const questions = await getQuestions(limit)
 
       set({ questions })
     },
